@@ -10,7 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+# Get debug value from environment variable or default to True
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['*']
 
@@ -139,6 +140,7 @@ SIMPLE_JWT = {
 
 # Для локальной разработки (без S3)
 if DEBUG:
+    print("DEBUG is True, using local storage")
     STATIC_URL = 'static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     MEDIA_URL = 'media/'
@@ -149,6 +151,7 @@ if DEBUG:
         os.path.join(BASE_DIR, 'auction/static'),  # Если у вас есть статические файлы в основном приложении
     ]
 else:
+    print("DEBUG is False, using S3 storage")
     # Настройки для продакшн (с S3)
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
