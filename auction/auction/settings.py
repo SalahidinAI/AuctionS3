@@ -157,9 +157,14 @@ else:
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 
     AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = None
+    AWS_DEFAULT_ACL = 'public-read'
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+    
+    # Ensure proper CORS headers
+    AWS_S3_CORS_ALLOWED_ORIGINS = ['*']
+    AWS_S3_CORS_ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD']
+    AWS_LOCATION = 'static'
 
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
