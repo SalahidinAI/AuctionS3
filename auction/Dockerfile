@@ -1,15 +1,24 @@
-FROM python:3.12
-
-ENV PYTHONUNBUFFERED=1
+FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY req.txt /app/
-RUN pip install gunicorn
-RUN pip install setuptools
-RUN pip install --upgrade pip && \
-    pip install -r req.txt
+# Устанавливаем зависимости для сборки пакетов
+RUN apt-get update && apt-get install -y \
+    gcc \
+    python3-dev \
+    libssl-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY nginx/nginx.conf /etc/nginx/conf.d/
+# Установка зависимостей
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir gunicorn
 
-COPY . /app/
+# Копирование проекта
+COPY . .
+
+# Создаем директорию для статических файлов
+RUN mkdir -p /app/static /app/media /app/data
+
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn auction.wsgi:application --bind 0.0.0.0:8000"]
