@@ -4,6 +4,7 @@ from pathlib import Path
 
 # from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
@@ -12,7 +13,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-
 
 ]
 
@@ -75,16 +74,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'auction.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -109,12 +104,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
@@ -128,7 +121,6 @@ REST_FRAMEWORK = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -162,8 +154,11 @@ else:
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
     AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+
     AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = False
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
 
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
