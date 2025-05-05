@@ -180,3 +180,4 @@ else:
             "BACKEND": "auction.storage_backends.StaticStorage",
         },
     }
+    
